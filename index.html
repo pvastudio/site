@@ -108,6 +108,7 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:13px}
   .case-top{grid-template-columns:1fr}.case p,.tags{grid-column:1}
 }
 @media (max-width:480px){.grid4,.steps{grid-template-columns:1fr}}
+  .copy.done::after{content:" ✓"}
 </style>
 </head>
 <body>
@@ -245,6 +246,7 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:13px}
     <p><span class="ru">Опишите изделие, для чего нужна визуализация и желаемые сроки.</span><span class="en">Describe the product, what the visuals are for and your timeline.</span></p>
     <div class="links">
       <a class="btn" href="mailto:hello@pvastudio.ru">hello@pvastudio.ru</a>
+      <button class="tool copy" type="button" onclick="navigator.clipboard.writeText('anton@pvastudio.ru');this.classList.add('done')"><span class="ru">Копировать</span><span class="en">Copy</span></button>
       <a href="https://t.me/tonypaulson">Telegram</a>
       <a href="https://www.youtube.com/@PVASTUDIOCHANNEL">YouTube</a>
     </div>
