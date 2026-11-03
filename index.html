@@ -112,6 +112,8 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:13px}
 [data-theme="dark"] .copy.done::after{color:#4ade80}
   .break{display:none}
 @media (max-width:820px){.break{display:block;flex-basis:100%;height:0}}
+  .model svg{display:none}
+.model canvas{width:100%;height:auto;display:block}
 </style>
 </head>
 <body>
@@ -139,6 +141,7 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:13px}
     </div>
   </div>
   <div class="model">
+    <canvas id="hero" width="800" height="800" role="img" aria-label="Exploded view animation"></canvas>
     <svg viewBox="0 0 360 380" role="img" aria-label="Exploded view of a product">
       <defs>
         <g id="slab" class="solid">
@@ -310,6 +313,52 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:13px}
   root.setAttribute('data-theme',theme);
   document.getElementById('theme').addEventListener('click',function(){
     theme=theme==='dark'?'light':'dark';root.setAttribute('data-theme',theme)});
+})();
+</script>
+  <script>
+(function(){
+  var N=40, EXT='webp';
+  var cv=document.getElementById('hero'), ctx=cv.getContext('2d');
+  var range=document.getElementById('explode'), root=document.documentElement;
+  var sets={}, cur='';
+  function pad(i){return ('00'+i).slice(-3)}
+  function load(theme){
+    if(sets[theme])return sets[theme];
+    var arr=[];
+    for(var i=1;i<=N;i++){
+      var im=new Image();
+      im.onload=function(){cur=''};
+      im.src='hero-'+theme+'/'+pad(i)+'.'+EXT;
+      arr.push(im);
+    }
+    return sets[theme]=arr;
+  }
+  function ready(im){return im&&im.complete&&im.naturalWidth>0}
+  function pick(arr,idx){
+    for(var d=0;d<N;d++){
+      var a=arr[idx-d],b=arr[idx+d];
+      if(ready(a))return a;
+      if(ready(b))return b;
+    }
+    return null;
+  }
+  function frame(){
+    var theme=root.getAttribute('data-theme')==='dark'?'dark':'light';
+    var arr=load(theme);
+    var idx=Math.max(0,Math.min(N-1,Math.round(range.value/100*(N-1))));
+    var key=theme+idx;
+    if(key!==cur){
+      var im=pick(arr,idx);
+      if(im){
+        if(cv.width!==im.naturalWidth){cv.width=im.naturalWidth;cv.height=im.naturalHeight}
+        ctx.clearRect(0,0,cv.width,cv.height);
+        ctx.drawImage(im,0,0);
+        cur=key;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
 })();
 </script>
 </body>
